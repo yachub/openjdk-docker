@@ -2,85 +2,34 @@ pipeline {
     agent none
     stages {
         stage('Docker Build') {
-            parallel {
-                stage('windows-2019 8') {
-                    agent {
-                        label "amd64&&windock&&windows"
+            matrix {
+                agent any
+                axes {
+                    axis {
+                        name 'PLATFORM'
+                        values 'windows-2019'
                     }
-                    steps {
-                        dockerBuild(8)
+                    axis {
+                        name 'JDK_VERSION'
+                        values '8', '11', '14', '15'
                     }
-                }
-                stage('windows-2019 11') {
-                    agent {
-                        label "amd64&&windock&&windows"
+                    axis {
+                        name 'JDK_TYPE'
+                        values 'hotspot', 'openj9'
                     }
-                    steps {
-                        dockerBuild(11)
-                    }
-                }
-                stage('windows-2019 14') {
-                    agent {
-                        label "amd64&&windock&&windows"
-                    }
-                    steps {
-                        dockerBuild(14)
+                    axis {
+                        name 'TYPE'
+                        values 'jdk', 'jre'
                     }
                 }
-                stage('windows-2019 15') {
-                    agent {
-                        label "amd64&&windock&&windows"
-                    }
-                    steps {
-                        dockerBuild(15)
-                    }
-                }
-            }
-        }
-        stage('Docker Manifest') {
-            parallel {
-                stage("Manifest 8") {
-                    agent {
-                        label "amd64&&windock&&windows"
-                    }
-                    environment {
-                    DOCKER_CLI_EXPERIMENTAL = "enabled"
-                    }
-                    steps {
-                        dockerManifest(8)
-                    }
-                }
-                stage("Manifest 11") {
-                    agent {
-                        label "amd64&&windock&&windows"
-                    }
-                    environment {
-                    DOCKER_CLI_EXPERIMENTAL = "enabled"
-                    }
-                    steps {
-                        dockerManifest(11)
-                    }
-                }
-                stage("Manifest 14") {
-                    agent {
-                        label "amd64&&windock&&windows"
-                    }
-                    environment {
-                    DOCKER_CLI_EXPERIMENTAL = "enabled"
-                    }
-                    steps {
-                        dockerManifest(14)
-                    }
-                }
-                stage("Manifest 15") {
-                    agent {
-                        label "amd64&&windock&&windows"
-                    }
-                    environment {
-                    DOCKER_CLI_EXPERIMENTAL = "enabled"
-                    }
-                    steps {
-                        dockerManifest(15)
+                stages {
+                    stage('Build') {
+                        agent {
+                            label "amd64&&windock&&windows"
+                        }
+                        steps {
+                            echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
+                        }
                     }
                 }
             }
