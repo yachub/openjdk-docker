@@ -3,96 +3,36 @@ pipeline {
     stages {
         stage('Docker Build') {
             parallel {
-                stage('Linux x64') {
+                stage('windows-2019 8') {
                     agent {
-                        label "dockerBuild&&linux&&x64"
+                        label "amd64&&windock&&windows"
                     }
                     steps {
-                        dockerBuild(null)
-                    }
-                }
-                stage('Linux aarch64') {
-                    agent {
-                        label "dockerBuild&&linux&&aarch64"
-                    }
-                    steps {
-                        dockerBuild(null)
-                    }
-                }
-                stage('Linux armv7l 8') {
-                    agent {
-                        label "dockerBuild&&linux&&x64"
-                    }
-                    environment {
-                        DOCKER_CLI_EXPERIMENTAL = "enabled"
-                        TARGET_ARCHITECTURE = "linux/arm/v7" // defined in buildx https://www.docker.com/blog/multi-platform-docker-builds/
-                    }
-                    steps {
-                        // Setup docker for multiarch builds
-                        sh label: 'qemu-user', script: 'sudo apt-get -y install qemu-user'
-                        sh label: 'docker-qemu', script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
                         dockerBuild(8)
                     }
                 }
-                stage('Linux armv7l 11') {
+                stage('windows-2019 11') {
                     agent {
-                        label "dockerBuild&&linux&&x64"
-                    }
-                    environment {
-                        DOCKER_CLI_EXPERIMENTAL = "enabled"
-                        TARGET_ARCHITECTURE = "linux/arm/v7" // defined in buildx https://www.docker.com/blog/multi-platform-docker-builds/
+                        label "amd64&&windock&&windows"
                     }
                     steps {
-                        // Setup docker for multiarch builds
-                        sh label: 'qemu-user', script: 'sudo apt-get -y install qemu-user'
-                        sh label: 'docker-qemu', script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
                         dockerBuild(11)
                     }
                 }
-                stage('Linux armv7l 14') {
+                stage('windows-2019 14') {
                     agent {
-                        label "dockerBuild&&linux&&x64"
-                    }
-                    environment {
-                        DOCKER_CLI_EXPERIMENTAL = "enabled"
-                        TARGET_ARCHITECTURE = "linux/arm/v7" // defined in buildx https://www.docker.com/blog/multi-platform-docker-builds/
+                        label "amd64&&windock&&windows"
                     }
                     steps {
-                        // Setup docker for multiarch builds
-                        sh label: 'qemu-user', script: 'sudo apt-get -y install qemu-user'
-                        sh label: 'docker-qemu', script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
                         dockerBuild(14)
                     }
                 }
-                stage('Linux armv7l 15') {
+                stage('windows-2019 15') {
                     agent {
-                        label "dockerBuild&&linux&&x64"
-                    }
-                    environment {
-                        DOCKER_CLI_EXPERIMENTAL = "enabled"
-                        TARGET_ARCHITECTURE = "linux/arm/v7" // defined in buildx https://www.docker.com/blog/multi-platform-docker-builds/
+                        label "amd64&&windock&&windows"
                     }
                     steps {
-                        // Setup docker for multiarch builds
-                        sh label: 'qemu-user', script: 'sudo apt-get -y install qemu-user'
-                        sh label: 'docker-qemu', script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
                         dockerBuild(15)
-                    }
-                }
-                stage('Linux ppc64le') {
-                    agent {
-                        label "dockerBuild&&linux&&ppc64le"
-                    }
-                    steps {
-                        dockerBuild(null)
-                    }
-                }
-                stage('Linux s390x') {
-                    agent {
-                        label "docker&&linux&&s390x"
-                    }
-                    steps {
-                        dockerBuild(null)
                     }
                 }
             }
@@ -101,7 +41,7 @@ pipeline {
             parallel {
                 stage("Manifest 8") {
                     agent {
-                        label "dockerBuild&&linux&&x64"
+                        label "amd64&&windock&&windows"
                     }
                     environment {
                     DOCKER_CLI_EXPERIMENTAL = "enabled"
@@ -112,7 +52,7 @@ pipeline {
                 }
                 stage("Manifest 11") {
                     agent {
-                        label "dockerBuild&&linux&&x64"
+                        label "amd64&&windock&&windows"
                     }
                     environment {
                     DOCKER_CLI_EXPERIMENTAL = "enabled"
@@ -123,7 +63,7 @@ pipeline {
                 }
                 stage("Manifest 14") {
                     agent {
-                        label "dockerBuild&&linux&&x64"
+                        label "amd64&&windock&&windows"
                     }
                     environment {
                     DOCKER_CLI_EXPERIMENTAL = "enabled"
@@ -134,7 +74,7 @@ pipeline {
                 }
                 stage("Manifest 15") {
                     agent {
-                        label "dockerBuild&&linux&&x64"
+                        label "amd64&&windock&&windows"
                     }
                     environment {
                     DOCKER_CLI_EXPERIMENTAL = "enabled"
