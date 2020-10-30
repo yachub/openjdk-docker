@@ -93,9 +93,9 @@ def dockerBuild(version) {
         withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
             git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
             if (version){
-                sh label: '', script: "./build_all.sh ${version}"
+                bat label: '', script: "./build_all.sh ${version}"
             } else {
-                sh label: '', script: "./build_all.sh"
+                bat label: '', script: "./build_all.sh"
             }
         }
     }
@@ -106,7 +106,7 @@ def dockerManifest(version) {
     infra.withDockerCredentials {
         withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
             git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
-            sh label: '', script: "./update_manifest_all.sh ${version}"
+            bat label: '', script: "./update_manifest_all.sh ${version}"
         }
     }
 }
