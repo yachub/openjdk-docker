@@ -89,21 +89,24 @@ pipeline {
 }
 
 def dockerBuild(version) {
-    // dockerhub is the ID of the credentials stored in Jenkins
-    docker.withRegistry('https://index.docker.io/v1/', 'jenkins-dockerhub') {
-        git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
-        if (version){
-            sh label: '', script: "./build_all.sh ${version}"
-        } else {
-            sh label: '', script: "./build_all.sh"
+    infra.withDockerCredentials {
+        withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
+            git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
+            if (version){
+                sh label: '', script: "./build_all.sh ${version}"
+            } else {
+                sh label: '', script: "./build_all.sh"
+            }
         }
     }
 }
 
 def dockerManifest(version) {
     // dockerhub is the ID of the credentials stored in Jenkins
-    docker.withRegistry('https://index.docker.io/v1/', 'jenkins-dockerhub') {
-        git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
-        sh label: '', script: "./update_manifest_all.sh ${version}"
+    infra.withDockerCredentials {
+        withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
+            git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
+            sh label: '', script: "./update_manifest_all.sh ${version}"
+        }
     }
 }
