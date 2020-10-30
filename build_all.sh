@@ -22,6 +22,10 @@ if [ ! -z "$1" ]; then
 	supported_versions="$1"
 fi
 
+echo "supported_versions=${supported_versions}"
+echo "all_jvms=${all_jvms}"
+echo "all_packages=${all_packages}"
+
 for ver in ${supported_versions}
 do
 	for vm in ${all_jvms}
@@ -68,15 +72,15 @@ do
 			rm -f hotspot_*_latest.sh openj9_*_latest.sh push_commands.sh
 
 			# Now test the images from hub.docker.com
-			echo "==============================================================================="
-			echo "                                                                               "
-			echo "  $(date +%T) :    Testing Docker Images for Version ${ver} ${vm} ${package}   "
-			echo "                                                                               "
-			echo "==============================================================================="
+			# echo "==============================================================================="
+			# echo "                                                                               "
+			# echo "  $(date +%T) :    Testing Docker Images for Version ${ver} ${vm} ${package}   "
+			# echo "                                                                               "
+			# echo "==============================================================================="
 			# Only test the individual docker image tags and not the aliases
 			# as the aliases are not created yet.
-			echo "test_tags" > ${test_image_types_file}
-			./test_multiarch.sh "${ver}" "${vm}" "${package}"
+			# echo "test_tags" > ${test_image_types_file}
+			# ./test_multiarch.sh "${ver}" "${vm}" "${package}"
 		done
 	done
 done

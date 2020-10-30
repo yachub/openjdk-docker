@@ -16,7 +16,7 @@ set -o pipefail
 
 export root_dir="$PWD"
 push_cmdfile=${root_dir}/push_commands.sh
-target_repo="adoptopenjdk/openjdk"
+target_repo="jenkinsciinfra/openjdk"
 version="9"
 
 # shellcheck source=common_functions.sh
@@ -201,6 +201,7 @@ function check_build_needed() {
  
 # Build the Docker image with the given repo, build, build type and tags.
 function build_image() {
+  echo "Building Image..."
 	repo=$1; shift;
 	build=$1; shift;
 	btype=$1; shift;

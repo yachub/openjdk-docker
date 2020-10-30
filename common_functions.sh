@@ -124,7 +124,7 @@ function set_arch_os() {
 			MINGW64*|MSYS_NT*)
 				current_arch="x86_64"
 				#  windowsservercore-1809 windowsservercore-1803 are not included as Adopt can't build them
-				oses="windowsservercore-ltsc2016"
+				oses="windowsservercore-ltsc2019"
 				# this variable will only be set when running under GitHub Actions
 				if [ -n "${BUILD_OS}" ]; then
 					case ${BUILD_OS} in
