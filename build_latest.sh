@@ -16,7 +16,7 @@ set -o pipefail
 
 export root_dir="$PWD"
 push_cmdfile=${root_dir}/push_commands.sh
-target_repo="jenkinsciinfra/openjdk"
+target_repo="jenkins4eval/openjdk"
 version="9"
 
 # shellcheck source=common_functions.sh
