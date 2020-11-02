@@ -35,6 +35,9 @@ pipeline {
                             }
                           }
                           stage("push") {
+                            when {
+                              branch 'master'
+                            }
                             steps {
                               script {
                                 infra.withDockerCredentials {
@@ -49,29 +52,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-}
-
-def dockerBuild(version) {
-    infra.withDockerCredentials {
-        withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
-            git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
-            if (version){
-                bat label: '', script: "build_all.sh ${version}"
-            } else {
-                bat label: '', script: "build_all.sh"
-            }
-        }
-    }
-}
-
-def dockerManifest(version) {
-    // dockerhub is the ID of the credentials stored in Jenkins
-    infra.withDockerCredentials {
-        withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
-            git poll: false, url: 'https://github.com/jenkins-infra/openjdk-docker.git'
-            bat label: '', script: "update_manifest_all.sh ${version}"
         }
     }
 }
