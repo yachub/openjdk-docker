@@ -29,7 +29,7 @@ pipeline {
                         }
                         steps {
                             echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
-                            bat "build_latest.sh ${JDK_VERSION} ${JDK_TYPE} ${TYPE} test"
+                            bat "docker build -f .\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.nightly.full c:\\temp\\"
                         }
                     }
                 }
