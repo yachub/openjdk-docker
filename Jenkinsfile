@@ -29,6 +29,7 @@ pipeline {
                         }
                         steps {
                             echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
+                            bat "build_latest.sh ${JDK_VERSION} ${JDK_TYPE} ${TYPE} test"
                         }
                     }
                 }
