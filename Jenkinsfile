@@ -29,7 +29,7 @@ pipeline {
                         }
                         steps {
                             echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
-                            bat "docker build -f .\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full c:\\temp\\"
+                            bat "docker build -f .\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full -t jenkins4eval/openjdk:${JDK_TYPE}-windowsservercore-ltsc2019 c:\\temp\\"
                         }
                     }
                 }
