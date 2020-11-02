@@ -37,9 +37,11 @@ pipeline {
                             label "amd64&&windock&&windows"
                         }
                         steps {
-                            infra.withDockerCredentials {
-                                withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
-                                    bat "docker push jenkins4eval/openjdk:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019"
+                            script {
+                                infra.withDockerCredentials {
+                                    withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
+                                        bat "docker push jenkins4eval/openjdk:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019"
+                                    }
                                 }
                             }
                         }
