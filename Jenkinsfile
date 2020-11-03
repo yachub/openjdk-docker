@@ -66,5 +66,5 @@ pipeline {
 def getJavaVersion(path) {
   def contents = readFile file: path
   def javaVersion = contents.split('\n').find{ it.startsWith('ENV JAVA_VERSION') }.replace('ENV JAVA_VERSION ','').replace('+','-')  
-  return javaVersion.replaceAll("^jdk-").replaceAll("^jdk", "")
+  return javaVersion.replaceAll("^jdk-", "").replaceAll("^jdk", "")
 }
