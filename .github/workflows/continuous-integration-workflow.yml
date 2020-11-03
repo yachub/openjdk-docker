@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2016, windows-2019, ubuntu-20.04]
-        version: [8, 11, 14, 15]
+        os: [windows-2019]
+        version: [8, 11, 15]
         vm: [hotspot, openj9]
         package: [jdk, jre]
         runtype: [test]
