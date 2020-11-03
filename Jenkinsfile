@@ -63,6 +63,5 @@ pipeline {
 
 def getJavaVersion(path) {
    def contents = readFile file: path
-   echo contents  
-   return "JAVA_VERSION"
+   return contents.split('\n').find{ it.startsWith('ENV JAVA_VERSION') }  
 }
