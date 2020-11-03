@@ -32,11 +32,11 @@ pipeline {
                 steps { 
                   script {
                     dockerFile = ".\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full"
+                    fullTag = getJavaVersion(dockerFile)
                   }
                   echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
                   publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
-                  echo getJavaVersion(dockerFile)
-                  bat "docker build -f .\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full -t jenkins4eval/openjdk:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 c:\\temp\\"
+                  bat "docker build -f ${dockerFile} -t jenkins4eval/openjdk:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 -t jenkins4eval/openjdk:${fullTag}-windowsservercore-ltsc2019 c:\\temp\\"
                 }
               }
               stage("push") {
@@ -48,6 +48,7 @@ pipeline {
                     infra.withDockerCredentials {
                       withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
                         bat "docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019"
+                        bat "docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}:${fullTag}-windowsservercore-ltsc2019"
                       }
                     }
                   }  
@@ -63,5 +64,5 @@ pipeline {
 
 def getJavaVersion(path) {
    def contents = readFile file: path
-   return contents.split('\n').find{ it.startsWith('ENV JAVA_VERSION') }  
+   return contents.split('\n').find{ it.startsWith('ENV JAVA_VERSION') }.replace('ENV JAVA_VERSION ','').replace('+','-')  
 }
