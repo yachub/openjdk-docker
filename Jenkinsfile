@@ -39,19 +39,11 @@ pipeline {
                   echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
                   echo tagsString
                   publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
-                  bat "docker build -f ${dockerFile} -t jenkins4eval/openjdk:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 -t jenkins4eval/openjdk:${fullJdkVersion}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 c:\\temp\\"
-                }
-              }
-              stage("push") {
-                when {
-                  branch 'master'
-                }
-                steps {
+                  bat "docker build -f ${dockerFile} ${tagsString} c:\\temp\\"
                   script {
                     infra.withDockerCredentials {
-                      withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
-                        bat "docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019"
-                        bat "docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}:${fullJdkVersion}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019"
+                      tags.each{ tag -> 
+                        bat "docker push ${tag}"
                       }
                     }
                   }  
