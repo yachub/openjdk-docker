@@ -77,7 +77,11 @@ def getJavaVersion(path) {
 
 def getTags(jdkShortVersion, jdkLongVersion, type, jdkType) {
   def tags = []
-  tags << "jenkins4eval/opnjdk:${jdkShortVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"  
-  tags << "jenkins4eval/opnjdk:${jdkLongVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"
+  if (BRANCH_NAME == 'master') {
+    tags << "jenkins4eval/openjdk:${jdkShortVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"  
+    tags << "jenkins4eval/openjdk:${jdkLongVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"
+  } else {
+    tags << "jenkins4eval/openjdk:${jdkShortVersion}-${type}-${jdkType}-SNAPSHOT"
+  }
   return tags
 }
