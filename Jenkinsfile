@@ -34,9 +34,10 @@ pipeline {
                     dockerFile = ".\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full"
                     fullJdkVersion = getJavaVersion(dockerFile)
                     tags = getTags(JDK_VERSION, fullJdkVersion, TYPE, JDK_TYPE)
+                    tagString = "-t ${tags.join(' -t ')}"
                   }
                   echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
-                  echo tags.join(", ")
+                  echo tagsString
                   publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
                   bat "docker build -f ${dockerFile} -t jenkins4eval/openjdk:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 -t jenkins4eval/openjdk:${fullJdkVersion}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 c:\\temp\\"
                 }
@@ -76,7 +77,7 @@ def getJavaVersion(path) {
 
 def getTags(jdkShortVersion, jdkLongVersion, type, jdkType) {
   def tags = []
-  tags << "${jdkShortVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"  
-  tags << "${jdkLongVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"
+  tags << "jenkins4eval/opnjdk:${jdkShortVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"  
+  tags << "jenkins4eval/opnjdk:${jdkLongVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"
   return tags
 }
