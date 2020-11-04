@@ -37,9 +37,9 @@ pipeline {
                     tagString = "-t ${tags.join(' -t ')}"
                   }
                   echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
-                  echo tagsString
+                  echo tagString
                   publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
-                  bat "docker build -f ${dockerFile} ${tagsString} c:\\temp\\"
+                  bat "docker build -f ${dockerFile} ${tagString} c:\\temp\\"
                   script {
                     infra.withDockerCredentials {
                       tags.each{ tag -> 
@@ -72,6 +72,15 @@ def getTags(jdkShortVersion, jdkLongVersion, type, jdkType) {
   if (BRANCH_NAME == 'master') {
     tags << "jenkins4eval/openjdk:${jdkShortVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"  
     tags << "jenkins4eval/openjdk:${jdkLongVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"
+    if (jdkShortVersion == '15') {
+      tags << "jenkins4eval/openjdk:${type}-${jdkType}-windowsservercore-ltsc2019"
+      if (jdkType == 'hotspot') {
+        tags << "jenkins4eval/openjdk:${type}-windowsservercore-ltsc2019"
+        if (type == 'jdk') {
+          tags << "jenkins4eval/openjdk:windowsservercore-ltsc2019"
+        }
+      }  
+    }
   } else {
     tags << "jenkins4eval/openjdk:${jdkShortVersion}-${type}-${jdkType}-SNAPSHOT"
   }
