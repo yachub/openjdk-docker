@@ -36,16 +36,17 @@ pipeline {
                 }
                 steps { 
                   script {
+                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: IN_PROGRESS
                     echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
                     echo env.TAG_STRING
                   
-                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
                     bat "docker build -f ${env.DOCKER_FILE} ${env.TAG_STRING} c:\\temp\\"
                     infra.withDockerCredentials {
                       getTags(JDK_VERSION, env.FULL_JDK_VERSION, TYPE, JDK_TYPE).each{ tag -> 
                         bat "docker push ${tag}"
                       }
                     }
+                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: COMPLETED
                   }  
                 }
               }
