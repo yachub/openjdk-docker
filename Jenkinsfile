@@ -32,7 +32,7 @@ pipeline {
                 environment {
                     DOCKER_FILE = ".\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full"
                     FULL_JDK_VERSION = getJavaVersion(env.DOCKER_FILE)
-                    TAG_STRING = "-t " + getTags(JDK_VERSION, FULL_JDK_VERSION, TYPE, JDK_TYPE).join(' -t ')
+                    TAG_STRING = "-t ${getTags(JDK_VERSION, FULL_JDK_VERSION, TYPE, JDK_TYPE).join(' -t ')}"
                 }
                 steps { 
                   script {
