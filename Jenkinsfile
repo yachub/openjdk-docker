@@ -36,7 +36,7 @@ pipeline {
                 }
                 steps { 
                   script {
-                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: IN_PROGRESS
+                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: "IN_PROGRESS"
                     echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
                     echo env.TAG_STRING
                   
@@ -46,7 +46,7 @@ pipeline {
                         bat "docker push ${tag}"
                       }
                     }
-                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: COMPLETED
+                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: "COMPLETED"
                   }  
                 }
               }
