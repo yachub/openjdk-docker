@@ -81,6 +81,10 @@ def getTags(jdkShortVersion, jdkLongVersion, type, jdkType) {
         }
       }  
     }
+    if (type == 'jdk') {
+      tags << "jenkins4eval/openjdk:${jdkShortVersion}-${jdkType}-windowsservercore-ltsc2019"
+      tags << "jenkins4eval/openjdk:${jdkLongVersion}-${jdkType}-windowsservercore-ltsc2019"
+    }
   } else {
     tags << "jenkins4eval/openjdk:${jdkShortVersion}-${type}-${jdkType}-SNAPSHOT"
   }
