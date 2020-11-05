@@ -29,29 +29,24 @@ pipeline {
             }
             stages {
               stage("build") {
+                environment {
+                    DOCKER_FILE = ".\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full"
+                    FULL_JDK_VERSION = getJavaVersion(env.DOCKER_FILE)
+                    TAG_STRING = "-t ${getTags(JDK_VERSION, FULL_JDK_VERSION, TYPE, JDK_TYPE).join(' -t ')}"
+                }
                 steps { 
                   script {
-                    dockerFile = ".\\${JDK_VERSION}\\${TYPE}\\windows\\windowsservercore-ltsc2019\\Dockerfile.${JDK_TYPE}.releases.full"
-                    fullJdkVersion = getJavaVersion(dockerFile)
-                  }
-                  echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
-                  echo fullJdkVersion  
-                  publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
-                  bat "docker build -f ${dockerFile} -t jenkins4eval/openjdk:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 -t jenkins4eval/openjdk:${fullJdkVersion}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019 c:\\temp\\"
-                }
-              }
-              stage("push") {
-                when {
-                  branch 'master'
-                }
-                steps {
-                  script {
+                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: "IN_PROGRESS"
+                    echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
+                    echo env.TAG_STRING
+                  
+                    bat "docker build -f ${env.DOCKER_FILE} ${env.TAG_STRING} c:\\temp\\"
                     infra.withDockerCredentials {
-                      withEnv(['DOCKERHUB_ORGANISATION=jenkins4eval','DOCKERHUB_REPO=openjdk']) {
-                        bat "docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}:${JDK_VERSION}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019"
-                        bat "docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}:${fullJdkVersion}-${TYPE}-${JDK_TYPE}-windowsservercore-ltsc2019"
+                      getTags(JDK_VERSION, env.FULL_JDK_VERSION, TYPE, JDK_TYPE).each{ tag -> 
+                        bat "docker push ${tag}"
                       }
                     }
+                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build', status: "COMPLETED"
                   }  
                 }
               }
@@ -71,4 +66,28 @@ def getJavaVersion(path) {
     return withoutJdkPrefix.split('_')[0]
   }
   return withoutJdkPrefix
+}
+
+def getTags(jdkShortVersion, jdkLongVersion, type, jdkType) {
+  def tags = []
+  if (BRANCH_NAME == 'master') {
+    tags << "jenkins4eval/openjdk:${jdkShortVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"  
+    tags << "jenkins4eval/openjdk:${jdkLongVersion}-${type}-${jdkType}-windowsservercore-ltsc2019"
+    if (jdkShortVersion == '15') {
+      tags << "jenkins4eval/openjdk:${type}-${jdkType}-windowsservercore-ltsc2019"
+      if (jdkType == 'hotspot') {
+        tags << "jenkins4eval/openjdk:${type}-windowsservercore-ltsc2019"
+        if (type == 'jdk') {
+          tags << "jenkins4eval/openjdk:windowsservercore-ltsc2019"
+        }
+      }  
+    }
+    if (type == 'jdk') {
+      tags << "jenkins4eval/openjdk:${jdkShortVersion}-${jdkType}-windowsservercore-ltsc2019"
+      tags << "jenkins4eval/openjdk:${jdkLongVersion}-${jdkType}-windowsservercore-ltsc2019"
+    }
+  } else {
+    tags << "jenkins4eval/openjdk:${jdkShortVersion}-${type}-${jdkType}-SNAPSHOT"
+  }
+  return tags
 }
