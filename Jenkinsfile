@@ -37,12 +37,12 @@ pipeline {
                     fullJdkVersion = getJavaVersion(env.DOCKER_FILE)
                     tags = getTags(JDK_VERSION, fullJdkVersion, TYPE, JDK_TYPE)
                     tagString = "-t ${tags.join(' -t ')}"
-                  }
-                  echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
-                  echo tagString
-                  publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
-                  bat "docker build -f ${env.DOCKER_FILE} ${tagString} c:\\temp\\"
-                  script {
+                    
+                    echo "Do Build for ${PLATFORM} / ${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}"
+                    echo tagString
+                  
+                    publishChecks name: "${JDK_VERSION} / ${JDK_TYPE} / ${TYPE}", title: 'Docker Build'
+                    bat "docker build -f ${env.DOCKER_FILE} ${tagString} c:\\temp\\"
                     infra.withDockerCredentials {
                       tags.each{ tag -> 
                         bat "docker push ${tag}"
